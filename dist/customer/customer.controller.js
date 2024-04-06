@@ -53,6 +53,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = require("inversify");
 var TYPES_1 = __importDefault(require("../TYPES"));
+require("reflect-metadata");
 var CustomerController = /** @class */ (function () {
     function CustomerController(customerService) {
         this.customerService = customerService;

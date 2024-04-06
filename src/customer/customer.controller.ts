@@ -5,7 +5,7 @@ import { CustomerDTO } from './dto/customer.dto'
 import { inject, injectable } from 'inversify'
 import TYPES from '../TYPES'
 import ICustomerService from './customer.interface'
-
+import "reflect-metadata";
 
 @injectable()
 class CustomerController {
