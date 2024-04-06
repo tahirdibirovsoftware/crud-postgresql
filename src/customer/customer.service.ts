@@ -2,7 +2,7 @@ import { Pool, QueryConfig } from "pg";
 import { CustomerDTO } from "./dto/customer.dto";
 import ICustomerService from "./customer.interface";
 import { injectable } from "inversify";
-import  pool from '../db.config'
+import pool from '../db.config'
 
 @injectable()
 class CustomerService implements ICustomerService {
