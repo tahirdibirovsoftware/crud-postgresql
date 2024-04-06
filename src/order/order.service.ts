@@ -1,9 +1,15 @@
 import { Pool, QueryArrayConfig, QueryConfig } from "pg";
 import OrderDto from "./dto/order.dto";
+import IOrderService from "./order.interface";
+import { injectable } from "inversify";
+import 'reflect-metadata'
+import pool from "../db.config";
 
 
-class OrderService {
-    constructor(private readonly pool: Pool) { }
+@injectable()
+class OrderService implements IOrderService{
+    
+    private readonly pool = pool
 
     async getAllOrders() {
         try {
@@ -25,7 +31,7 @@ class OrderService {
             values: [id]
         }
 
-        return (await this.pool.query(queryConfig)).rows
+        return (await this.pool.query(queryConfig)).rows[0]
     }
 
 
@@ -47,7 +53,7 @@ class OrderService {
                     text: `INSERT INTO orders (${keys}) values(${placeholders}) RETURNING *`,
                     values
                 }
-                return (await this.pool.query(queryConfig)).rows
+                return (await this.pool.query(queryConfig)).rows[0]
             } catch (err) {
                 throw err instanceof Error ? err : new Error('An unexpected error occured')
             }

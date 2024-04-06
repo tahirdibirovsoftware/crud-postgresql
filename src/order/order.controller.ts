@@ -2,11 +2,15 @@ import { Pool } from "pg";
 import OrderService from "./order.service";
 import { Response, Request } from "express";
 import OrderDto from "./dto/order.dto";
+import { inject, injectable } from "inversify";
+import 'reflect-metadata'
+import TYPES from "../TYPES";
+import IOrderService from "./order.interface";
 
-
+@injectable()
 class OrderController {
 
-    constructor(private readonly orderService: OrderService){}
+    constructor(@inject(TYPES.IOrderService) private readonly orderService: IOrderService){}
 
     async getAllOrders(req: Request, res: Response){
         try{

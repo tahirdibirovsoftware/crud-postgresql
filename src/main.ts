@@ -12,7 +12,7 @@ app.use(express.json())
 const PORT = 4500
 
 const customerController = container.get<CustomerController>(TYPES.CustomerController)
-const orderController = new OrderController(new OrderService(pool))
+const orderController = container.get<OrderController>(TYPES.OrderController)
 
 
 app.post('/customer', customerController.addCustomer.bind(customerController))
