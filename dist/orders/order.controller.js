@@ -36,75 +36,73 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomerController = /** @class */ (function () {
-    function CustomerController(customerService) {
-        this.customerService = customerService;
+var OrderController = /** @class */ (function () {
+    function OrderController(orderService) {
+        this.orderService = orderService;
     }
-    CustomerController.prototype.addCustomer = function (req, res) {
+    OrderController.prototype.getAllOrders = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerService.addCustomer(req.body)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    CustomerController.prototype.updateCustomer = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerService.updateCustomer(+req.params.id, req.body)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    CustomerController.prototype.deleteCustomer = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
+            var _a, _b, err_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _b = (_a = res).send;
-                        return [4 /*yield*/, this.customerService.deleteCustomerById(+req.params.id)];
-                    case 1:
-                        _b.apply(_a, [(_c.sent()).rows]);
-                        return [2 /*return*/];
+                        _c.trys.push([0, 2, , 3]);
+                        _b = (_a = res.status(200)).send;
+                        return [4 /*yield*/, this.orderService.getAllOrders()];
+                    case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+                    case 2:
+                        err_1 = _c.sent();
+                        res.status(400).send(new Error(err_1).message);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    CustomerController.prototype.getCustomerById = function (req, res) {
+    OrderController.prototype.getOrderById = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
+            var id, _a, _b, err_2;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _b = (_a = res).send;
-                        return [4 /*yield*/, this.customerService.getCustomerById(+req.params.id)];
+                        _c.trys.push([0, 2, , 3]);
+                        id = req.params.id;
+                        _b = (_a = res.status(200)).send;
+                        return [4 /*yield*/, this.orderService.getOrderById(+id)];
                     case 1:
-                        _b.apply(_a, [(_c.sent()).rows]);
-                        return [2 /*return*/];
+                        _b.apply(_a, [_c.sent()]);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _c.sent();
+                        res.status(400).send(new Error(err_2).message);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    CustomerController.prototype.getAllCustomers = function (req, res) {
+    OrderController.prototype.createOrder = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
+            var order, _a, _b, err_3;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _b = (_a = res).send;
-                        return [4 /*yield*/, this.customerService.getAllCustomers()];
+                        _c.trys.push([0, 2, , 3]);
+                        order = req.body;
+                        _b = (_a = res.status(200)).send;
+                        return [4 /*yield*/, this.orderService.createOrder(order)];
                     case 1:
-                        _b.apply(_a, [(_c.sent()).rows]);
-                        return [2 /*return*/];
+                        _b.apply(_a, [_c.sent()]);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _c.sent();
+                        res.status(400).send(new Error(err_3).message);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    return CustomerController;
+    return OrderController;
 }());
-exports.default = CustomerController;
+exports.default = OrderController;

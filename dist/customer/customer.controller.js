@@ -42,20 +42,30 @@ var CustomerController = /** @class */ (function () {
     }
     CustomerController.prototype.addCustomer = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerService.addCustomer(req.body)];
-                    case 1: return [2 /*return*/, _a.sent()];
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _b = (_a = res.status(200)).send;
+                        return [4 /*yield*/, this.customerService.addCustomer(req.body)];
+                    case 1:
+                        _b.apply(_a, [_c.sent()]);
+                        return [2 /*return*/];
                 }
             });
         });
     };
     CustomerController.prototype.updateCustomer = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerService.updateCustomer(+req.params.id, req.body)];
-                    case 1: return [2 /*return*/, _a.sent()];
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _b = (_a = res.status(200)).send;
+                        return [4 /*yield*/, this.customerService.updateCustomer(+req.params.id, req.body)];
+                    case 1:
+                        _b.apply(_a, [_c.sent()]);
+                        return [2 /*return*/];
                 }
             });
         });
@@ -101,6 +111,30 @@ var CustomerController = /** @class */ (function () {
                     case 1:
                         _b.apply(_a, [(_c.sent()).rows]);
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    CustomerController.prototype.getCustomerOrder = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id, _a, _b, err_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        id = req.params.id;
+                        _c.label = 1;
+                    case 1:
+                        _c.trys.push([1, 3, , 4]);
+                        _b = (_a = res.status(200)).send;
+                        return [4 /*yield*/, this.customerService.getCustomerOrder(id)];
+                    case 2:
+                        _b.apply(_a, [_c.sent()]);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _c.sent();
+                        res.status(500).send(new Error(err_1).message);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

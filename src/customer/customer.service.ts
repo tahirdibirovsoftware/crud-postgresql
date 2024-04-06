@@ -84,7 +84,22 @@ class CustomerService {
         throw err instanceof Error ? err : new Error('An unexpected error occured')
      }
 
-}
+    }
+
+
+    async getCustomerOrder(id: Pick<CustomerDTO, 'id'>){
+        try{
+            const queryConfig: QueryConfig = {
+                text: `SELECT new_customers.name, orders.orderName FROM (SELECT * from customers where id=$1) as new_customers JOIN orders ON new_customers.id=orders.customerId;`,
+                values: [id]
+            }
+        const myOrders = (await this.pool.query(queryConfig)).rows
+        return myOrders;
+        }catch(err){
+            throw err instanceof Error ? err : new Error('An unexpected error occured')
+        }
+    }
+
 }
 
 export default CustomerService
