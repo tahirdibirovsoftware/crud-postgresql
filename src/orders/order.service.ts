@@ -44,7 +44,7 @@ class OrderService {
                 const values = Object.values(order)
                 const placeholders = Object.keys(order).map((_, index) => `$${index + 1}`).join(', ')
                 const queryConfig: QueryConfig = {
-                    text: `INSERT INTO orders (${keys}) values(${placeholders})`,
+                    text: `INSERT INTO orders (${keys}) values(${placeholders}) RETURNING *`,
                     values
                 }
                 return (await this.pool.query(queryConfig)).rows

@@ -99,7 +99,7 @@ var OrderService = /** @class */ (function () {
                         values = Object.values(order);
                         placeholders = Object.keys(order).map(function (_, index) { return "$".concat(index + 1); }).join(', ');
                         queryConfig_1 = {
-                            text: "INSERT INTO orders (".concat(keys, ") values(").concat(placeholders, ")"),
+                            text: "INSERT INTO orders (".concat(keys, ") values(").concat(placeholders, ") RETURNING *"),
                             values: values
                         };
                         return [4 /*yield*/, this.pool.query(queryConfig_1)];

@@ -11,7 +11,7 @@ class CustomerService {
             const keys = Object.keys(schema).join(', ');
             const values = Object.values(schema);
             const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
-            const text = `INSERT INTO customers (${keys}) VALUES (${placeholders})`;
+            const text = `INSERT INTO customers (${keys}) VALUES (${placeholders}) RETURNING *`;
             const queryConfig: QueryConfig = { text, values }
             const customerResult = await this.pool.query(queryConfig, values);
             return customerResult.rows; // Depending on what you expect to return after insertion

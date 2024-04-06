@@ -50,7 +50,7 @@ var CustomerService = /** @class */ (function () {
                         keys = Object.keys(schema).join(', ');
                         values = Object.values(schema);
                         placeholders = values.map(function (_, index) { return "$".concat(index + 1); }).join(', ');
-                        text = "INSERT INTO customers (".concat(keys, ") VALUES (").concat(placeholders, ")");
+                        text = "INSERT INTO customers (".concat(keys, ") VALUES (").concat(placeholders, ") RETURNING *");
                         queryConfig = { text: text, values: values };
                         return [4 /*yield*/, this.pool.query(queryConfig, values)];
                     case 1:
