@@ -21,11 +21,11 @@ class OrderService {
 
     async getOrderById(id: Pick<OrderDto, 'orderId'>) {
         const queryConfig: QueryConfig = {
-            text: `SELECT * FROM orders WHERE order_id=$1`,
+            text: `SELECT * FROM orders WHERE orderId=$1`,
             values: [id]
         }
 
-        return ((await this.pool.query(queryConfig)).rows)
+        return (await this.pool.query(queryConfig)).rows
     }
 
 

@@ -36,75 +36,84 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomerController = /** @class */ (function () {
-    function CustomerController(customerService) {
-        this.customerService = customerService;
+var OrderService = /** @class */ (function () {
+    function OrderService(pool) {
+        this.pool = pool;
     }
-    CustomerController.prototype.addCustomer = function (req, res) {
+    OrderService.prototype.getAllOrders = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var queryConfig, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerService.addCustomer(req.body)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        queryConfig = {
+                            text: "SELECT * FROM orders;",
+                        };
+                        return [4 /*yield*/, this.pool.query(queryConfig)];
+                    case 1: return [2 /*return*/, (_a.sent()).rows];
+                    case 2:
+                        err_1 = _a.sent();
+                        throw err_1 instanceof Error ? err_1 : new Error('An unexpected error occured');
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    CustomerController.prototype.updateCustomer = function (req, res) {
+    OrderService.prototype.getOrderById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
+            var queryConfig;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerService.updateCustomer(+req.params.id, req.body)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    CustomerController.prototype.deleteCustomer = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
                     case 0:
-                        _b = (_a = res).send;
-                        return [4 /*yield*/, this.customerService.deleteCustomerById(+req.params.id)];
-                    case 1:
-                        _b.apply(_a, [(_c.sent()).rows]);
-                        return [2 /*return*/];
+                        queryConfig = {
+                            text: "SELECT * FROM orders WHERE orderId=$1",
+                            values: [id]
+                        };
+                        return [4 /*yield*/, this.pool.query(queryConfig)];
+                    case 1: return [2 /*return*/, (_a.sent()).rows];
                 }
             });
         });
     };
-    CustomerController.prototype.getCustomerById = function (req, res) {
+    OrderService.prototype.createOrder = function (order) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var customerId, queryConfig, doesCustomerExist, keys, values, placeholders, queryConfig_1, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b = (_a = res).send;
-                        return [4 /*yield*/, this.customerService.getCustomerById(+req.params.id)];
+                        customerId = order.customerId;
+                        queryConfig = {
+                            text: 'SELECT name FROM customers WHERE id=$1',
+                            values: [customerId]
+                        };
+                        return [4 /*yield*/, this.pool.query(queryConfig)];
                     case 1:
-                        _b.apply(_a, [(_c.sent()).rows]);
-                        return [2 /*return*/];
+                        doesCustomerExist = (_a.sent()).rows.length;
+                        console.log(doesCustomerExist);
+                        if (!doesCustomerExist) return [3 /*break*/, 6];
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 5]);
+                        keys = Object.keys(order).map(function (key) { return key; }).join(', ');
+                        values = Object.values(order);
+                        placeholders = Object.keys(order).map(function (_, index) { return "$".concat(index + 1); }).join(', ');
+                        queryConfig_1 = {
+                            text: "INSERT INTO orders (".concat(keys, ") values(").concat(placeholders, ") RETURNING *"),
+                            values: values
+                        };
+                        return [4 /*yield*/, this.pool.query(queryConfig_1)];
+                    case 3: return [2 /*return*/, (_a.sent()).rows];
+                    case 4:
+                        err_2 = _a.sent();
+                        throw err_2 instanceof Error ? err_2 : new Error('An unexpected error occured');
+                    case 5: return [3 /*break*/, 7];
+                    case 6: throw new Error("Customer doesn't exist");
+                    case 7: return [2 /*return*/];
                 }
             });
         });
     };
-    CustomerController.prototype.getAllCustomers = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        _b = (_a = res).send;
-                        return [4 /*yield*/, this.customerService.getAllCustomers()];
-                    case 1:
-                        _b.apply(_a, [(_c.sent()).rows]);
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return CustomerController;
+    return OrderService;
 }());
-exports.default = CustomerController;
+exports.default = OrderService;

@@ -2,14 +2,16 @@ import express from 'express'
 import CustomerController from './customer/customer.controller'
 import CustomerService from './customer/customer.service'
 import pool from './db.config'
-import OrderController from './orders/order.controller'
-import OrderService from './orders/order.service'
+import OrderController from './order/order.controller'
+import OrderService from './order/order.service'
+import container from './inversify.config'
+import TYPES from './TYPES'
 
 const app = express()
 app.use(express.json())
 const PORT = 4500
 
-const customerController = new CustomerController(new CustomerService(pool))
+const customerController = container.get<CustomerController>(TYPES.CustomerController)
 const orderController = new OrderController(new OrderService(pool))
 
 

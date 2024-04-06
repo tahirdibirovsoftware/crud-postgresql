@@ -1,4 +1,13 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,6 +45,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var pg_1 = require("pg");
+var inversify_1 = require("inversify");
 var CustomerService = /** @class */ (function () {
     function CustomerService(pool) {
         this.pool = pool;
@@ -55,7 +66,7 @@ var CustomerService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.query(queryConfig, values)];
                     case 1:
                         customerResult = _a.sent();
-                        return [2 /*return*/, customerResult.rows]; // Depending on what you expect to return after insertion
+                        return [2 /*return*/, customerResult.rows[0]]; // Depending on what you expect to return after insertion
                     case 2:
                         err_1 = _a.sent();
                         // It's good practice to check if err is an instance of Error
@@ -80,7 +91,9 @@ var CustomerService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.query(query)];
                     case 1:
                         updateCustomerResult = _a.sent();
-                        return [3 /*break*/, 3];
+                        return [2 /*return*/, updateCustomerResult.rows[0]
+                            // Process the result of the update operation if needed
+                        ];
                     case 2:
                         err_2 = _a.sent();
                         // It's good practice to check if err is an instance of Error
@@ -104,7 +117,7 @@ var CustomerService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.query(queryConfig)];
                     case 1:
                         deletedOne = _a.sent();
-                        return [2 /*return*/, deletedOne];
+                        return [2 /*return*/, deletedOne.rows[0]];
                     case 2:
                         err_3 = _a.sent();
                         throw err_3 instanceof Error ? err_3 : new Error('An unexpected error occured');
@@ -125,7 +138,7 @@ var CustomerService = /** @class */ (function () {
                             values: [id]
                         };
                         return [4 /*yield*/, this.pool.query(queryConfig)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2 /*return*/, (_a.sent()).rows[0]];
                     case 2:
                         err_4 = _a.sent();
                         throw err_4 instanceof Error ? err_4 : new Error('An unexpected error occured');
@@ -145,7 +158,7 @@ var CustomerService = /** @class */ (function () {
                             text: "SELECT * FROM customers"
                         };
                         return [4 /*yield*/, this.pool.query(queryConfig)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2 /*return*/, (_a.sent()).rows];
                     case 2:
                         err_5 = _a.sent();
                         throw err_5 instanceof Error ? err_5 : new Error('An unexpected error occured');
@@ -177,6 +190,10 @@ var CustomerService = /** @class */ (function () {
             });
         });
     };
+    CustomerService = __decorate([
+        (0, inversify_1.injectable)(),
+        __metadata("design:paramtypes", [pg_1.Pool])
+    ], CustomerService);
     return CustomerService;
 }());
 exports.default = CustomerService;

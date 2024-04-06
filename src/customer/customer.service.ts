@@ -1,7 +1,11 @@
 import { Pool, QueryConfig } from "pg";
 import { CustomerDTO } from "./dto/customer.dto";
+import ICustomerService from "./customer.interface";
+import { injectable } from "inversify";
 
-class CustomerService {
+
+@injectable()
+class CustomerService implements ICustomerService {
 
     constructor(private readonly pool: Pool) { }
 
@@ -14,7 +18,7 @@ class CustomerService {
             const text = `INSERT INTO customers (${keys}) VALUES (${placeholders}) RETURNING *`;
             const queryConfig: QueryConfig = { text, values }
             const customerResult = await this.pool.query(queryConfig, values);
-            return customerResult.rows; // Depending on what you expect to return after insertion
+            return customerResult.rows[0]; // Depending on what you expect to return after insertion
         } catch (err) {
             // It's good practice to check if err is an instance of Error
             throw err instanceof Error ? err : new Error('An unexpected error occurred');
@@ -33,6 +37,7 @@ class CustomerService {
 
             // Ensure this.pool.query is called in a way that returns a promise
             const updateCustomerResult = await this.pool.query(query);
+            return updateCustomerResult.rows[0]
             // Process the result of the update operation if needed
         } catch (err) {
             // It's good practice to check if err is an instance of Error
@@ -50,7 +55,7 @@ class CustomerService {
             }
 
             const deletedOne = await this.pool.query(queryConfig)
-            return deletedOne
+            return deletedOne.rows[0]
         } catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured');
         }
@@ -59,14 +64,14 @@ class CustomerService {
 
 
     async getCustomerById(id: number) {
-        try{
+        try {
             const queryConfig: QueryConfig = {
                 text: `SELECT * FROM customers WHERE id=$1`,
                 values: [id]
             }
-    
-            return await this.pool.query(queryConfig)
-        }catch(err){
+
+            return (await this.pool.query(queryConfig)).rows[0]
+        } catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured');
         }
 
@@ -74,28 +79,28 @@ class CustomerService {
 
 
     async getAllCustomers() {
-     try{
-        const queryConfig: QueryConfig = {
-            text: `SELECT * FROM customers`
+        try {
+            const queryConfig: QueryConfig = {
+                text: `SELECT * FROM customers`
+            }
+            return (await this.pool.query(queryConfig)).rows
         }
-        return await this.pool.query(queryConfig)
-    }
-     catch(err){
-        throw err instanceof Error ? err : new Error('An unexpected error occured')
-     }
+        catch (err) {
+            throw err instanceof Error ? err : new Error('An unexpected error occured')
+        }
 
     }
 
 
-    async getCustomerOrder(id: Pick<CustomerDTO, 'id'>){
-        try{
+    async getCustomerOrder(id: Pick<CustomerDTO, 'id'>) {
+        try {
             const queryConfig: QueryConfig = {
                 text: `SELECT new_customers.name, orders.orderName FROM (SELECT * from customers where id=$1) as new_customers JOIN orders ON new_customers.id=orders.customerId;`,
                 values: [id]
             }
-        const myOrders = (await this.pool.query(queryConfig)).rows
-        return myOrders;
-        }catch(err){
+            const myOrders = (await this.pool.query(queryConfig)).rows
+            return myOrders;
+        } catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured')
         }
     }

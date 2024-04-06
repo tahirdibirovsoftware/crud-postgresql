@@ -67,11 +67,11 @@ var OrderService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         queryConfig = {
-                            text: "SELECT * FROM orders WHERE order_id=$1",
+                            text: "SELECT * FROM orders WHERE orderId=$1",
                             values: [id]
                         };
                         return [4 /*yield*/, this.pool.query(queryConfig)];
-                    case 1: return [2 /*return*/, ((_a.sent()).rows)];
+                    case 1: return [2 /*return*/, (_a.sent()).rows];
                 }
             });
         });

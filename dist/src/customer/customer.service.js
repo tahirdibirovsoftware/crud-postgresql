@@ -50,7 +50,7 @@ var CustomerService = /** @class */ (function () {
                         keys = Object.keys(schema).join(', ');
                         values = Object.values(schema);
                         placeholders = values.map(function (_, index) { return "$".concat(index + 1); }).join(', ');
-                        text = "INSERT INTO customers (".concat(keys, ") VALUES (").concat(placeholders, ")");
+                        text = "INSERT INTO customers (".concat(keys, ") VALUES (").concat(placeholders, ") RETURNING *");
                         queryConfig = { text: text, values: values };
                         return [4 /*yield*/, this.pool.query(queryConfig, values)];
                     case 1:
@@ -125,7 +125,7 @@ var CustomerService = /** @class */ (function () {
                             values: [id]
                         };
                         return [4 /*yield*/, this.pool.query(queryConfig)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2 /*return*/, (_a.sent()).rows];
                     case 2:
                         err_4 = _a.sent();
                         throw err_4 instanceof Error ? err_4 : new Error('An unexpected error occured');
@@ -149,6 +149,29 @@ var CustomerService = /** @class */ (function () {
                     case 2:
                         err_5 = _a.sent();
                         throw err_5 instanceof Error ? err_5 : new Error('An unexpected error occured');
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    CustomerService.prototype.getCustomerOrder = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var queryConfig, myOrders, err_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        queryConfig = {
+                            text: "SELECT new_customers.name, orders.orderName FROM (SELECT * from customers where id=$1) as new_customers JOIN orders ON new_customers.id=orders.customerId;",
+                            values: [id]
+                        };
+                        return [4 /*yield*/, this.pool.query(queryConfig)];
+                    case 1:
+                        myOrders = (_a.sent()).rows;
+                        return [2 /*return*/, myOrders];
+                    case 2:
+                        err_6 = _a.sent();
+                        throw err_6 instanceof Error ? err_6 : new Error('An unexpected error occured');
                     case 3: return [2 /*return*/];
                 }
             });
