@@ -2,12 +2,12 @@ import { Pool, QueryConfig } from "pg";
 import { CustomerDTO } from "./dto/customer.dto";
 import ICustomerService from "./customer.interface";
 import { injectable } from "inversify";
-
+import  pool from '../db.config'
 
 @injectable()
 class CustomerService implements ICustomerService {
 
-    constructor(private readonly pool: Pool) { }
+    private pool = pool;
 
 
     async addCustomer(schema: CustomerDTO) {
