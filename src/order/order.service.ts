@@ -1,15 +1,16 @@
-import { Pool, QueryArrayConfig, QueryConfig } from "pg";
+import { QueryConfig } from "pg";
 import OrderDto from "./dto/order.dto";
 import IOrderService from "./order.interface";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import 'reflect-metadata'
-import pool from "../db.config";
+import TYPES from "../TYPES";
+import PoolService from "../db.config";
 
 
 @injectable()
 class OrderService implements IOrderService{
     
-    private readonly pool = pool
+    constructor(@inject(TYPES.PoolService) private readonly poolService: PoolService){}
 
     async getAllOrders() {
         try {
@@ -17,7 +18,7 @@ class OrderService implements IOrderService{
             {
                 text: `SELECT * FROM orders;`,
             }
-            return (await this.pool.query(queryConfig)).rows
+            return (await this.poolService.pool.query(queryConfig)).rows
         }
         catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured')
@@ -31,7 +32,7 @@ class OrderService implements IOrderService{
             values: [id]
         }
 
-        return (await this.pool.query(queryConfig)).rows[0]
+        return (await this.poolService.pool.query(queryConfig)).rows[0]
     }
 
 
@@ -42,7 +43,7 @@ class OrderService implements IOrderService{
             text: 'SELECT name FROM customers WHERE id=$1',
             values: [customerId]
         }
-        const doesCustomerExist = (await this.pool.query(queryConfig)).rows.length
+        const doesCustomerExist = (await this.poolService.pool.query(queryConfig)).rows.length
         console.log(doesCustomerExist)
         if (doesCustomerExist) {
             try {
@@ -53,7 +54,7 @@ class OrderService implements IOrderService{
                     text: `INSERT INTO orders (${keys}) values(${placeholders}) RETURNING *`,
                     values
                 }
-                return (await this.pool.query(queryConfig)).rows[0]
+                return (await this.poolService.pool.query(queryConfig)).rows[0]
             } catch (err) {
                 throw err instanceof Error ? err : new Error('An unexpected error occured')
             }

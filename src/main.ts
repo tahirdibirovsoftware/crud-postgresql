@@ -1,9 +1,6 @@
 import express from 'express'
 import CustomerController from './customer/customer.controller'
-import CustomerService from './customer/customer.service'
-import pool from './db.config'
 import OrderController from './order/order.controller'
-import OrderService from './order/order.service'
 import container from './inversify.config'
 import TYPES from './TYPES'
 

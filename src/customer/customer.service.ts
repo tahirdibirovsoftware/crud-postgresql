@@ -1,14 +1,16 @@
 import { Pool, QueryConfig } from "pg";
 import { CustomerDTO } from "./dto/customer.dto";
 import ICustomerService from "./customer.interface";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import pool from '../db.config'
 import 'reflect-metadata'
+import TYPES from "../TYPES";
+import PoolService from "../db.config";
 
 @injectable()
 class CustomerService implements ICustomerService {
 
-    private pool = pool;
+    constructor(@inject(TYPES.PoolService) private readonly poolService: PoolService){}
 
 
     async addCustomer(schema: CustomerDTO) {
@@ -18,7 +20,7 @@ class CustomerService implements ICustomerService {
             const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
             const text = `INSERT INTO customers (${keys}) VALUES (${placeholders}) RETURNING *`;
             const queryConfig: QueryConfig = { text, values }
-            const customerResult = await this.pool.query(queryConfig, values);
+            const customerResult = await this.poolService.pool.query(queryConfig, values);
             return customerResult.rows[0]; // Depending on what you expect to return after insertion
         } catch (err) {
             // It's good practice to check if err is an instance of Error
@@ -37,7 +39,7 @@ class CustomerService implements ICustomerService {
             const query: QueryConfig = { text, values }
 
             // Ensure this.pool.query is called in a way that returns a promise
-            const updateCustomerResult = await this.pool.query(query);
+            const updateCustomerResult = await this.poolService.pool.query(query);
             return updateCustomerResult.rows[0]
             // Process the result of the update operation if needed
         } catch (err) {
@@ -55,7 +57,7 @@ class CustomerService implements ICustomerService {
                 values: [id]
             }
 
-            const deletedOne = await this.pool.query(queryConfig)
+            const deletedOne = await this.poolService.pool.query(queryConfig)
             return deletedOne.rows[0]
         } catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured');
@@ -71,7 +73,7 @@ class CustomerService implements ICustomerService {
                 values: [id]
             }
 
-            return (await this.pool.query(queryConfig)).rows[0]
+            return (await this.poolService.pool.query(queryConfig)).rows[0]
         } catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured');
         }
@@ -84,7 +86,7 @@ class CustomerService implements ICustomerService {
             const queryConfig: QueryConfig = {
                 text: `SELECT * FROM customers`
             }
-            return (await this.pool.query(queryConfig)).rows
+            return (await this.poolService.pool.query(queryConfig)).rows
         }
         catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured')
@@ -99,7 +101,7 @@ class CustomerService implements ICustomerService {
                 text: `SELECT new_customers.name, orders.orderName FROM (SELECT * from customers where id=$1) as new_customers JOIN orders ON new_customers.id=orders.customerId;`,
                 values: [id]
             }
-            const myOrders = (await this.pool.query(queryConfig)).rows
+            const myOrders = (await this.poolService.pool.query(queryConfig)).rows
             return myOrders;
         } catch (err) {
             throw err instanceof Error ? err : new Error('An unexpected error occured')

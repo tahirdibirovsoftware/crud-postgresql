@@ -1,5 +1,3 @@
-import { Pool } from "pg";
-import OrderService from "./order.service";
 import { Response, Request } from "express";
 import OrderDto from "./dto/order.dto";
 import { inject, injectable } from "inversify";

@@ -18,6 +18,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "inversify": "^6.0.2",
+    "npm": "^10.5.1",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.2.2"
   }
